@@ -1,0 +1,3 @@
+requests
+pyaes
+python-xmltv
