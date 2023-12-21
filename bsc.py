@@ -8,6 +8,8 @@ import json
 import requests
 import base64
 from pyaes import aes
+import SimpleHTTPServer
+import SocketServer
 
 
 _username = str(os.environ.get('BULSAT_USER', 'test'))
@@ -18,6 +20,8 @@ _cache = str(os.environ.get('BULSAT_CACHE', 'true'))
 _url = str(os.environ.get('BULSAT_URL', 'https://api.iptv.bulsat.com'))
 _timeout = int(os.environ.get('BULSAT_TIMEOUT', 10))
 _os = int(os.environ.get('BULSAT_TIMEOUT', 1))
+_httpd = str(os.environ.get('BULSAT_HTTP', 'false'))
+_port = int(os.environ.get('BULSAT_HTTP_PORT', 8000))
 _debug = str(os.environ.get('BULSAT_DEBUG', 'false'))
 
 
@@ -186,3 +190,11 @@ else:
         if _download_epg != 'false':
             json_epg = get_epg(json_channel)
             save_epg(json_epg)
+
+# http server
+if _httpd != 'false':
+    os.chdir(_files_path)
+    Handler = SimpleHTTPServer.SimpleHTTPRequestHandler
+    httpd = SocketServer.TCPServer(('', _port), Handler)
+    print('serving at port', _port)
+    httpd.serve_forever()
