@@ -142,9 +142,11 @@ def save_epg(live):
             w.addChannel({'display-name': [(channel['title'], u'bg')], 'id': channel['epg_name'], 'url': ['https://test.iptv.bulsat.com']})
 
             if channel.has_key('program'):
-                for p in channel['program']:
-                    if len(p['title']) > 0:
-                        w.addProgramme({'start': p['start'], 'stop': p['stop'], 'title': [(p['title'], u'')], 'desc': [(p['desc'], u'')], 'category': [(channel['genre'], u'')], 'channel': channel['epg_name']})
+                p = channel['program']
+                # debug
+                log(p)
+                if len(p['title']) > 0:
+                    w.addProgramme({'start': p['start'], 'stop': p['stop'], 'title': [(p['title'], u'')], 'desc': [(p['desc'], u'')], 'category': [(channel['genre'], u'')], 'channel': channel['epg_name']})
 
         out = StringIO.StringIO()
         w.write(out, pretty_print=True)
