@@ -8,21 +8,75 @@ import json
 import requests
 import base64
 from pyaes import aes
+import argparse
 import SimpleHTTPServer
 import SocketServer
 
 
-_username = str(os.environ.get('BULSAT_USER', 'test'))
-_password = str(os.environ.get('BULSAT_PASS', 'test'))
-_files_path = str(os.environ.get('BULSAT_DIR', './'))
-_download_epg = str(os.environ.get('BULSAT_EPG', 'false'))
-_cache = str(os.environ.get('BULSAT_CACHE', 'true'))
-_url = str(os.environ.get('BULSAT_URL', 'https://api.iptv.bulsat.com'))
-_timeout = int(os.environ.get('BULSAT_TIMEOUT', 10))
-_os = int(os.environ.get('BULSAT_TIMEOUT', 1))
-_httpd = str(os.environ.get('BULSAT_HTTP', 'false'))
-_port = int(os.environ.get('BULSAT_HTTP_PORT', 8000))
-_debug = str(os.environ.get('BULSAT_DEBUG', 'false'))
+parser = argparse.ArgumentParser(description='Usage: %prog [options]')
+parser.add_argument(
+        '--username',
+        help=u'Username for Bulsatcom',
+        default=os.environ.get('BULSAT_USER', 'test'))
+parser.add_argument(
+        '--password',
+        help=u'Password for Bulsatcom',
+        default=os.environ.get('BULSAT_PASS', 'test'))
+parser.add_argument(
+        '--output',
+        help=u'Output directory',
+        default=os.environ.get('BULSAT_DIR', './'))
+parser.add_argument(
+        '--epg',
+        help=u'Download EPG (default: False)',
+        action='store_true',
+        default=os.environ.get('BULSAT_EPG', False))
+parser.add_argument(
+        '--cache',
+        help=u'Enable cache (default: False)',
+        action='store_true',
+        default=os.environ.get('BULSAT_CACHE', False))
+parser.add_argument(
+        '--url',
+        help=u'URL of API endpoint',
+        default=os.environ.get('BULSAT_URL',
+                                   'https://api.iptv.bulsat.com'))
+parser.add_argument(
+        '--timeout',
+        help=u'Timeout in seconds (default: 10)',
+        default=os.environ.get('BULSAT_TIMEOUT', 10))
+parser.add_argument(
+        '--os',
+        help=u'OS Type [0: pcweb, 1: samsungtv] (default: 1)',
+        default=os.environ.get('BULSAT_OS', 1))
+parser.add_argument(
+        '--http',
+        help=u'Serve files via web (default: False)',
+        action='store_true',
+        default=os.environ.get('BULSAT_HTTP', False))
+parser.add_argument(
+        '--port',
+        help=u'Port for web server (default: 8000)',
+        default=os.environ.get('BULSAT_HTTP_PORT', 8000))
+parser.add_argument(
+        '--debug',
+        help=u'Enable debugging (default: False)',
+        action='store_true',
+        default=os.environ.get('BULSAT_DEBUG', False))
+args = parser.parse_args()
+
+
+_username = str(args.username)
+_password = str(args.password)
+_files_path = str(args.output)
+_download_epg = bool(args.epg)
+_cache = bool(args.cache)
+_url = str(args.url)
+_timeout = int(args.timeout)
+_os = int(args.os)
+_httpd = bool(args.http)
+_port = int(args.port)
+_debug = bool(args.debug)
 
 
 _os_list = ['pcweb', 'samsungtv']
@@ -42,7 +96,7 @@ _ua = {
 }
 
 def log(s):
-    if _debug != 'false':
+    if _debug:
         print(s)
 
 def login(username, password):
@@ -158,7 +212,7 @@ def save_epg(live):
 
 def load_channel():
     # check if cash is enabled in settings
-    if _cache == 'false':
+    if not _cache:
         return False
 
     # check if file exist in folder
@@ -189,12 +243,12 @@ else:
         save_channel(json_channel)
 
         # epg
-        if _download_epg != 'false':
+        if _download_epg:
             json_epg = get_epg(json_channel)
             save_epg(json_epg)
 
 # http server
-if _httpd != 'false':
+if _httpd:
     os.chdir(_files_path)
     Handler = SimpleHTTPServer.SimpleHTTPRequestHandler
     httpd = SocketServer.TCPServer(('', _port), Handler)
