@@ -221,6 +221,8 @@ def load_channel():
 
 if not _username or not _password or not _files_path:
     raise SystemExit('Error: Missing required parameters')
+elif not os.access(_files_path, os.W_OK):
+    raise SystemExit('Error: Cannot write to output directory')
 else:
     # login
     session = login(_username, _password)
