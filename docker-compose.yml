@@ -1,0 +1,12 @@
+version: '2.4'
+
+services:
+  bsc:
+    container_name: bsc
+    build:
+      context: .
+    restart: unless-stopped
+    volumes:
+      - ./data:/data
+    ports:
+      - 8000:8000/tcp
