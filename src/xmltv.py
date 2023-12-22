@@ -60,7 +60,7 @@ def set_boolean(dict, name, elem):
         elif node.text.lower() == 'no':
             dict[name] = False
 
-def append_text(dict, name, elem, with_lang=True):
+def append_text(dict_, name, elem, with_lang=True):
     """
     append_text(dict, name, elem, with_lang=True) -> None
 
@@ -68,12 +68,12 @@ def append_text(dict, name, elem, with_lang=True):
     'with_lang' is 'True', a tuple of ('text', 'lang') is appended
     """
     for node in elem.findall(name):
-        if not dict.has_key(name):
-            dict[name] = []
+        if name not in dict_.keys():
+            dict_[name] = []
         if with_lang:
-            dict[name].append((node.text, node.get('lang', '')))
+            dict_[name].append((node.text, node.get('lang', '')))
         else:
-            dict[name].append(node.text)
+            dict_[name].append(node.text)
 
 def set_text(dict, name, elem, with_lang=True):
     """
@@ -89,18 +89,18 @@ def set_text(dict, name, elem, with_lang=True):
         else:
             dict[name] = node.text
 
-def append_icons(dict, elem):
+def append_icons(dict_, elem):
     """
     append_icons(dict, elem) -> None
 
     Append any icons found under 'elem' to 'dict'
     """
     for iconnode in elem.findall('icon'):
-        if not dict.has_key('icon'):
-            dict['icon'] = []
+        if 'icon' not in dict_.keys():
+            dict_['icon'] = []
         icond = {}
         set_attrs(icond, iconnode, ('src', 'width', 'height'))
-        dict['icon'].append(icond)
+        dict_['icon'].append(icond)
 
 
 def elem_to_channel(elem):
@@ -174,7 +174,7 @@ def elem_to_programme(elem):
     append_text(d, 'country', elem)
 
     for epnumnode in elem.findall('episode-num'):
-        if not d.has_key('episode-num'):
+        if 'episode-num' not in d.keys():
             d['episode-num'] = []
         d['episode-num'].append((epnumnode.text,
                                  epnumnode.get('system', 'xmltv_ns')))
@@ -212,7 +212,7 @@ def elem_to_programme(elem):
         d['new'] = True
 
     for stnode in elem.findall('subtitles'):
-        if not d.has_key('subtitles'):
+        if 'subtitles' not in d.keys():
             d['subtitles'] = []
         std = {}
         set_attrs(std, stnode, ('type',))
@@ -220,7 +220,7 @@ def elem_to_programme(elem):
         d['subtitles'].append(std)
 
     for ratnode in elem.findall('rating'):
-        if not d.has_key('rating'):
+        if 'rating' not in d.keys():
             d['rating'] = []
         ratd = {}
         set_attrs(ratd, ratnode, ('system',))
@@ -229,7 +229,7 @@ def elem_to_programme(elem):
         d['rating'].append(ratd)
 
     for srnode in elem.findall('star-rating'):
-        if not d.has_key('star-rating'):
+        if 'star-rating' not in d.keys():
             d['star-rating'] = []
         srd = {}
         set_attrs(srd, srnode, ('system',))
@@ -238,7 +238,7 @@ def elem_to_programme(elem):
         d['star-rating'].append(srd)
 
     for revnode in elem.findall('review'):
-        if not d.has_key('review'):
+        if 'review' not in d.keys():
             d['review'] = []
         rd = {}
         set_attrs(rd, revnode, ('type', 'source', 'reviewer',))
@@ -375,11 +375,11 @@ class Writer:
         Create 'icons' under 'node'
         """
         for icon in icons:
-            if not icon.has_key('src'):
+            if 'src' not in icon.keys():
                 raise ValueError("'icon' element requires 'src' attribute")
             i = SubElement(node, 'icon')
             for attr in ('src', 'width', 'height'):
-                if icon.has_key(attr):
+                if attr in icon.keys():
                     self.setattr(i, attr, icon[attr])
 
 
@@ -390,7 +390,7 @@ class Writer:
         Add nodes under p for the element 'element', which occurs zero
         or more times with PCDATA and a 'lang' attribute
         """
-        if programme.has_key(element):
+        if element in programme.keys():
             for item in programme[element]:
                 e = SubElement(p, element)
                 self.settext(e, item)
@@ -402,7 +402,7 @@ class Writer:
         Add nodes under p for the element 'element', which occurs zero
         times or once with PCDATA and a 'lang' attribute
         """
-        if programme.has_key(element):
+        if element in programme.keys():
             e = SubElement(p, element)
             self.settext(e, programme[element])
 
@@ -419,13 +419,13 @@ class Writer:
 
         # programme attributes
         for attr in ('start', 'channel'):
-            if programme.has_key(attr):
+            if attr in programme.keys():
                 self.setattr(p, attr, programme[attr])
             else:
                 raise ValueError("'programme' must contain '%s' attribute" % attr)
 
         for attr in ('stop', 'pdc-start', 'vps-start', 'showview', 'videoplus', 'clumpidx'):
-            if programme.has_key(attr):
+            if attr in programme.keys():
                 self.setattr(p, attr, programme[attr])
 
         for title in programme['title']:
@@ -437,17 +437,17 @@ class Writer:
             self.set_zero_ormore(programme, element, p)
 
         # Credits
-        if programme.has_key('credits'):
+        if 'credits' in programme.keys():
             c = SubElement(p, 'credits')
             for credtype in ('director', 'actor', 'writer', 'adapter',
                              'producer', 'presenter', 'commentator', 'guest'):
-                if programme['credits'].has_key(credtype):
+                if credtype in programme['credits'].keys():
                     for name in programme['credits'][credtype]:
                         cred = SubElement(c, credtype)
                         self.settext(cred, name, with_lang=False)
 
         # Date
-        if programme.has_key('date'):
+        if 'date' in programme.keys():
             d = SubElement(p, 'date')
             self.settext(d, programme['date'], with_lang=False)
 
@@ -459,17 +459,17 @@ class Writer:
             self.set_zero_orone(programme, element, p)
 
         # Length
-        if programme.has_key('length'):
+        if 'length' in programme.keys():
             l = SubElement(p, 'length')
             self.setattr(l, 'units', programme['length']['units'])
             self.settext(l, programme['length']['length'], with_lang=False)
 
         # Icon
-        if programme.has_key('icon'):
+        if 'icon' in programme.keys():
             self.seticons(p, programme['icon'])
 
         # URL
-        if programme.has_key('url'):
+        if 'url' in programme.keys():
             for url in programme['url']:
                 u = SubElement(p, 'url')
                 self.settext(u, url, with_lang=False)
@@ -478,21 +478,21 @@ class Writer:
         self.set_zero_ormore(programme, 'country', p)
 
         # Episode-num
-        if programme.has_key('episode-num'):
+        if 'episode-num' in programme.keys():
             for epnum in programme['episode-num']:
                 e = SubElement(p, 'episode-num')
                 self.setattr(e, 'system', epnum[1])
                 self.settext(e, epnum[0], with_lang=False)
 
         # Video details
-        if programme.has_key('video'):
+        if 'video' in programme.keys():
             e = SubElement(p, 'video')
             for videlem in ('aspect', 'quality'):
-                if programme['video'].has_key(videlem):
+                if videlem in programme['video'].keys():
                     v = SubElement(e, videlem)
                     self.settext(v, programme['video'][videlem], with_lang=False)
             for attr in ('present', 'colour'):
-                if programme['video'].has_key(attr):
+                if attr in programme['video'].keys():
                     a = SubElement(e, attr)
                     if programme['video'][attr]:
                         self.settext(a, 'yes', with_lang=False)
@@ -500,12 +500,12 @@ class Writer:
                         self.settext(a, 'no', with_lang=False)
 
         # Audio details
-        if programme.has_key('audio'):
+        if 'audio' in programme.keys():
             a = SubElement(p, 'audio')
-            if programme['audio'].has_key('stereo'):
+            if 'stereo' in programme['audio'].keys():
                 s = SubElement(a, 'stereo')
                 self.settext(s, programme['audio']['stereo'], with_lang=False)
-            if programme['audio'].has_key('present'):
+            if 'present' in programme['audio'].keys():
                 p = SubElement(a, 'present')
                 if programme['audio']['present']:
                     self.settext(p, 'yes', with_lang=False)
@@ -513,10 +513,10 @@ class Writer:
                     self.settext(p, 'no', with_lang=False)
 
         # Previously shown
-        if programme.has_key('previously-shown'):
+        if 'previously-shown' in programme.keys():
             ps = SubElement(p, 'previously-shown')
             for attr in ('start', 'channel'):
-                if programme['previously-shown'].has_key(attr):
+                if attr in programme['previously-shown'].keys():
                     self.setattr(ps, attr, programme['previously-shown'][attr])
 
         # Premiere / last chance
@@ -524,47 +524,47 @@ class Writer:
             self.set_zero_orone(programme, element, p)
 
         # New
-        if programme.has_key('new'):
+        if 'new' in programme.keys():
             n = SubElement(p, 'new')
 
         # Subtitles
-        if programme.has_key('subtitles'):
+        if 'subtitles' in programme.keys():
             for subtitles in programme['subtitles']:
                 s = SubElement(p, 'subtitles')
-                if subtitles.has_key('type'):
+                if 'type' in subtitles.keys():
                     self.setattr(s, 'type', subtitles['type'])
-                if subtitles.has_key('language'):
+                if 'language' in subtitles.keys():
                     l = SubElement(s, 'language')
                     self.settext(l, subtitles['language'])
 
         # Rating
-        if programme.has_key('rating'):
+        if 'rating' in programme.keys():
             for rating in programme['rating']:
                 r = SubElement(p, 'rating')
-                if rating.has_key('system'):
+                if 'system' in rating.keys():
                     self.setattr(r, 'system', rating['system'])
                 v = SubElement(r, 'value')
                 self.settext(v, rating['value'], with_lang=False)
-                if rating.has_key('icon'):
+                if 'icon' in rating.keys():
                     self.seticons(r, rating['icon'])
 
         # Star rating
-        if programme.has_key('star-rating'):
+        if 'star-rating' in programme.keys():
             for star_rating in programme['star-rating']:
                 sr = SubElement(p, 'star-rating')
-                if star_rating.has_key('system'):
+                if 'system' in star_rating.keys():
                     self.setattr(sr, 'system', star_rating['system'])
                 v = SubElement(sr, 'value')
                 self.settext(v, star_rating['value'], with_lang=False)
-                if star_rating.has_key('icon'):
+                if 'icon' in star_rating.keys():
                     self.seticons(sr, rating['icon'])
 
         # Review
-        if programme.has_key('review'):
+        if 'review' in programme.keys():
             for review in programme['review']:
                 r = SubElement(p, 'review')
                 for attr in ('type', 'source', 'reviewer'):
-                    if review.has_key(attr):
+                    if attr in review.keys():
                         self.setattr(r, attr, review[attr])
                 v = SubElement(r, 'value')
                 self.settext(v, review['value'], with_lang=False)
@@ -586,11 +586,11 @@ class Writer:
             self.settext(dn, display_name)
 
         # Icon
-        if channel.has_key('icon'):
+        if 'icon' in channel.keys():
             self.seticons(c, channel['icon'])
 
         # URL
-        if channel.has_key('url'):
+        if 'url' in channel.keys():
             for url in channel['url']:
                 u = SubElement(c, 'url')
                 self.settext(u, url, with_lang=False)
@@ -610,7 +610,10 @@ class Writer:
 if __name__ == '__main__':
 # Tests
     from pprint import pprint
-    from StringIO import StringIO
+    try:
+        from StringIO import StringIO
+    except ImportError:
+        from io import StringIO
     import sys
 
     # An example file
@@ -749,4 +752,7 @@ if __name__ == '__main__':
         w.addChannel(c)
     for p in programmes:
         w.addProgramme(p)
-    w.write(sys.stdout, pretty_print=True)
+    try:
+        w.write(sys.stdout.buffer, pretty_print=True)
+    except AttributeError:
+        w.write(sys.stdout, pretty_print=True)
