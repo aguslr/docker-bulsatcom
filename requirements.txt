@@ -1,0 +1,3 @@
+requests=2.21.0
+pyaes=1.6.1
+python-xmltv=1.3
