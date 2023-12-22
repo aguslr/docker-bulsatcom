@@ -96,7 +96,7 @@ def login(username, password):
     if _os != 0:
         url_auth = '?' + url_auth
 
-    r = _s.post(_url + '/' + url_auth, timeout = _timeout, headers = _ua)
+    r = _s.post(_url + '/' + url_auth, timeout = _timeout, headers = _ua, allow_redirects=False)
     key = r.headers['challenge']
     session = r.headers['ssbulsatapi']
 
@@ -116,7 +116,7 @@ def login(username, password):
         'os_type':['', _os_list[_os]],
         'app_version':['', '0.01'],
         'pass':['', base64.b64encode(password_crypt)]
-    })
+    }, allow_redirects=False)
 
     # debug
     log('Login ' + r.headers['logged'])
@@ -134,7 +134,7 @@ def get_channel(session):
     _s.headers.update({'SSBULSATAPI': session})
     _s.options(_url + '/tv/' + _os_list[_os] + '/live', timeout = _timeout, headers = _ua)
 
-    r = _s.post(_url + '/tv/' + _os_list[_os] + '/live', timeout = _timeout, headers = _ua)
+    r = _s.post(_url + '/tv/' + _os_list[_os] + '/live', timeout = _timeout, headers = _ua, allow_redirects=False)
 
     # debug
     log('Channel ' + str(r.status_code == requests.codes.ok))
@@ -173,7 +173,7 @@ def get_epg(live):
     for i, channel in enumerate(live):
         if channel.has_key('program'):
             #'epg': 'nownext' / '1day' / '1week'
-            r = _s.post(_url + '/' + 'epg/short', timeout = _timeout, headers = _ua, data = {'epg': '1day', 'channel': channel['epg_name']})
+            r = _s.post(_url + '/' + 'epg/short', timeout = _timeout, headers = _ua, data = {'epg': '1day', 'channel': channel['epg_name']}, allow_redirects=False)
 
             if r.status_code == requests.codes.ok:
                 channel['program'] = r.json().items()[0][1]['programme']
