@@ -18,12 +18,7 @@ RUN pip install -r /requirements.txt
 
 WORKDIR /data
 
-EXPOSE 8000/tcp
-
 VOLUME /data
-
-HEALTHCHECK --interval=1m --timeout=3s \
-  CMD timeout 2 bash -c 'cat < /dev/null > /dev/tcp/127.0.0.1/8000'
 
 USER www-data
 ENTRYPOINT ["/entrypoint.sh"]
