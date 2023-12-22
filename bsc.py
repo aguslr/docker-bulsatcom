@@ -9,8 +9,6 @@ import requests
 import base64
 from pyaes import aes
 import argparse
-import SimpleHTTPServer
-import SocketServer
 
 
 parser = argparse.ArgumentParser(description='Usage: %prog [options]')
@@ -54,15 +52,6 @@ parser.add_argument(
         help=u'Enable debugging',
         action='store_true',
         default=os.environ.get('BULSAT_DEBUG', False))
-parser.add_argument(
-        '--http',
-        help=u'Serve files via web',
-        action='store_true',
-        default=os.environ.get('BULSAT_HTTP', False))
-parser.add_argument(
-        '--port',
-        help=u'Port for web server (default: 8000)',
-        default=os.environ.get('BULSAT_HTTP_PORT', 8000))
 args = parser.parse_args()
 
 
@@ -74,8 +63,6 @@ _cache = bool(args.cache)
 _url = str(args.url)
 _timeout = int(args.timeout)
 _os = int(args.os)
-_httpd = bool(args.http)
-_port = int(args.port)
 _debug = bool(args.debug)
 
 
@@ -248,11 +235,3 @@ else:
         if _download_epg:
             json_epg = get_epg(json_channel)
             save_epg(json_epg)
-
-# http server
-if _httpd:
-    os.chdir(_files_path)
-    Handler = SimpleHTTPServer.SimpleHTTPRequestHandler
-    httpd = SocketServer.TCPServer(('', _port), Handler)
-    print('serving at port', _port)
-    httpd.serve_forever()
