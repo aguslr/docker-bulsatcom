@@ -10,11 +10,10 @@ RUN \
   && apt-get clean && rm -rf /var/lib/apt/lists/* /var/lib/apt/lists/* && \
   mkdir -p /data && chown -R www-data:www-data /data
 
-COPY src/main.py /usr/local/bin/bsc.py
-COPY src/requirements.txt /
+COPY src /src
 COPY entrypoint.sh /entrypoint.sh
 
-RUN pip install -r /requirements.txt
+RUN pip install -r /src/requirements.txt
 
 WORKDIR /data
 
