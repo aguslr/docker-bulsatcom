@@ -27,16 +27,6 @@ parser.add_argument(
         help=u'Output directory',
         default=os.environ.get('BULSAT_DIR', './'))
 parser.add_argument(
-        '--epg',
-        help=u'Download EPG (default: False)',
-        action='store_true',
-        default=os.environ.get('BULSAT_EPG', False))
-parser.add_argument(
-        '--cache',
-        help=u'Enable cache (default: False)',
-        action='store_true',
-        default=os.environ.get('BULSAT_CACHE', False))
-parser.add_argument(
         '--url',
         help=u'URL of API endpoint',
         default=os.environ.get('BULSAT_URL',
@@ -50,19 +40,29 @@ parser.add_argument(
         help=u'OS Type [0: pcweb, 1: samsungtv] (default: 1)',
         default=os.environ.get('BULSAT_OS', 1))
 parser.add_argument(
+        '--epg',
+        help=u'Download EPG',
+        action='store_true',
+        default=os.environ.get('BULSAT_EPG', False))
+parser.add_argument(
+        '--cache',
+        help=u'Enable cache',
+        action='store_true',
+        default=os.environ.get('BULSAT_CACHE', False))
+parser.add_argument(
+        '--debug',
+        help=u'Enable debugging',
+        action='store_true',
+        default=os.environ.get('BULSAT_DEBUG', False))
+parser.add_argument(
         '--http',
-        help=u'Serve files via web (default: False)',
+        help=u'Serve files via web',
         action='store_true',
         default=os.environ.get('BULSAT_HTTP', False))
 parser.add_argument(
         '--port',
         help=u'Port for web server (default: 8000)',
         default=os.environ.get('BULSAT_HTTP_PORT', 8000))
-parser.add_argument(
-        '--debug',
-        help=u'Enable debugging (default: False)',
-        action='store_true',
-        default=os.environ.get('BULSAT_DEBUG', False))
 args = parser.parse_args()
 
 
