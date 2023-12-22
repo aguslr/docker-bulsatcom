@@ -1,11 +1,11 @@
-ARG BASE_IMAGE=library/debian:buster-slim
+ARG BASE_IMAGE=library/debian:stable-slim
 
 FROM docker.io/${BASE_IMAGE}
 
 RUN \
   apt-get update && \
   env DEBIAN_FRONTEND=noninteractive \
-  apt-get install -y python2 python-pyaes python-requests \
+  apt-get install -y python-is-python3 python3-pyaes python3-requests \
   -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" \
   && apt-get clean && rm -rf /var/lib/apt/lists/* /var/lib/apt/lists/* && \
   mkdir -p /data && chown -R www-data:www-data /data
