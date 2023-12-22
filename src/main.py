@@ -1,7 +1,6 @@
 import io
 import os
 import StringIO
-import gzip
 import xmltv
 import time
 import json
