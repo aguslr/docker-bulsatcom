@@ -17,15 +17,15 @@ parser = argparse.ArgumentParser(description='Usage: %prog [options]')
 parser.add_argument(
         '--username',
         help=u'Username for Bulsatcom',
-        default=os.environ.get('BULSAT_USER', 'test'))
+        default=os.environ.get('BULSAT_USERNAME', 'test'))
 parser.add_argument(
         '--password',
         help=u'Password for Bulsatcom',
-        default=os.environ.get('BULSAT_PASS', 'test'))
+        default=os.environ.get('BULSAT_PASSWORD', 'test'))
 parser.add_argument(
         '--output',
         help=u'Output directory',
-        default=os.environ.get('BULSAT_DIR', './'))
+        default=os.environ.get('BULSAT_OUTPUT', './'))
 parser.add_argument(
         '--url',
         help=u'URL of API endpoint',
