@@ -10,8 +10,8 @@ RUN \
   && apt-get clean && rm -rf /var/lib/apt/lists/* /var/lib/apt/lists/* && \
   mkdir -p /data && chown -R www-data:www-data /data
 
-COPY bsc.py /usr/local/bin
-COPY requirements.txt /
+COPY src/main.py /usr/local/bin/bsc.py
+COPY src/requirements.txt /
 COPY entrypoint.sh /entrypoint.sh
 
 RUN pip install -r /requirements.txt
