@@ -51,6 +51,10 @@ parser.add_argument(
         help=u'Enable debugging',
         action='store_true',
         default=os.environ.get('BULSAT_DEBUG', False))
+parser.add_argument(
+        '--filter',
+        help=u'Filter out specific genre',
+        default=os.environ.get('BULSAT_FILTER'))
 args = parser.parse_args()
 
 
@@ -63,6 +67,7 @@ _url = str(args.url)
 _timeout = int(args.timeout)
 _os = int(args.os)
 _debug = bool(args.debug)
+_filter = str(args.filter)
 
 
 _os_list = ['pcweb', 'samsungtv']
@@ -154,7 +159,10 @@ def save_channel(live):
             ch_genre = channel['genre']
             ch_id = channel['channel']
 
-            play_list = play_list + '#EXTINF:%s radio="%s" group-title="%s" tvg-logo="%s" tvg-id="%s",%s\n%s\n' % (ch_id, ch_radio, ch_genre, ch_epg_name + '.png', ch_epg_name, ch_title, ch_sources)
+            if _filter and ch_genre == _filter.decode('utf-8'):
+                continue
+            else:
+                play_list = play_list + '#EXTINF:%s radio="%s" group-title="%s" tvg-logo="%s" tvg-id="%s",%s\n%s\n' % (ch_id, ch_radio, ch_genre, ch_epg_name + '.png', ch_epg_name, ch_title, ch_sources)
 
         f_m3u = open(os.path.join(_files_path, '', 'bulsat.m3u'), 'wb+')
         f_m3u.write(play_list.encode('utf-8', 'replace'))
@@ -182,14 +190,17 @@ def save_epg(live):
         w = xmltv.Writer(encoding='UTF-8', date=str(time.time()), source_info_url="", source_info_name="", generator_info_name="", generator_info_url="")
 
         for i, channel in enumerate(live):
-            w.addChannel({'display-name': [(channel['title'], u'bg')], 'id': channel['epg_name'], 'url': ['https://test.iptv.bulsat.com']})
+            if _filter and channel['genre'] == _filter.decode('utf-8'):
+                continue
+            else:
+                w.addChannel({'display-name': [(channel['title'], u'bg')], 'id': channel['epg_name'], 'url': ['https://test.iptv.bulsat.com']})
 
-            if channel.has_key('program'):
-                p = channel['program']
-                # debug
-                log(p)
-                if len(p['title']) > 0:
-                    w.addProgramme({'start': p['start'], 'stop': p['stop'], 'title': [(p['title'], u'')], 'desc': [(p['desc'], u'')], 'category': [(channel['genre'], u'')], 'channel': channel['epg_name']})
+                if channel.has_key('program'):
+                    p = channel['program']
+                    # debug
+                    log(p)
+                    if len(p['title']) > 0:
+                        w.addProgramme({'start': p['start'], 'stop': p['stop'], 'title': [(p['title'], u'')], 'desc': [(p['desc'], u'')], 'category': [(channel['genre'], u'')], 'channel': channel['epg_name']})
 
         out = StringIO.StringIO()
         w.write(out, pretty_print=True)

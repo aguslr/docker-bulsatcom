@@ -39,6 +39,7 @@ variables are prefixed by `BULSAT_`.
 | `WAIT`      | Wait time between updates   | 300     |
 | `EPG`       | Download EPG                | False   |
 | `CACHE`     | Enable cache                | False   |
+| `FILTER`    | Filter out specific genre   | EMPTY   |
 
 
 Build locally
