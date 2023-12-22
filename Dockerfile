@@ -22,4 +22,4 @@ VOLUME /data
 
 USER www-data
 ENTRYPOINT ["/entrypoint.sh"]
-CMD ["--cache", "--debug", "--epg"]
+CMD ["--debug"]
