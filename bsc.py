@@ -131,6 +131,9 @@ def login(username, password):
     log('Login ' + r.headers['logged'])
     log('Login ' + str(r.request.headers))
 
+    if str(r.headers['logged']) != 'true':
+        raise SystemExit('Error: Could not log into API')
+
     return session
 
 
@@ -230,8 +233,7 @@ def load_channel():
 
 
 if not _username or not _password or not _files_path:
-    # debug
-    log('Settings empty')
+    raise SystemExit('Error: Missing required parameters')
 else:
     # login
     session = login(_username, _password)
