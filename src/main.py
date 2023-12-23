@@ -180,7 +180,7 @@ def save_channel(live):
 
 def get_epg(live):
     for i, channel in enumerate(live):
-        if channel.has_key('program'):
+        if 'program' in channel:
             #'epg': 'nownext' / '1day' / '1week'
             r = _s.post(_url + '/' + 'epg/short', timeout = _timeout, headers = _ua, data = {'epg': '1day', 'channel': channel['epg_name']}, allow_redirects=False)
 
@@ -204,7 +204,7 @@ def save_epg(live):
             else:
                 w.addChannel({'display-name': [(channel['title'], u'bg')], 'id': channel['epg_name'], 'url': ['https://test.iptv.bulsat.com']})
 
-                if channel.has_key('program'):
+                if 'program' in channel:
                     p = channel['program']
                     # debug
                     log(p)
