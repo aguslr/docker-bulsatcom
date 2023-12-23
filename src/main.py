@@ -61,7 +61,7 @@ parser.add_argument(
 parser.add_argument(
         '--block',
         type=str,
-        help=u'Block specific genre',
+        help=u'Comma separated list of genres to block',
         default=os.environ.get('BULSAT_BLOCK'))
 args = parser.parse_args()
 
@@ -75,7 +75,8 @@ _url = args.url
 _timeout = args.timeout
 _os = args.os
 _debug = args.debug
-_block = args.block
+_block = args.block.split(',')
+_block_list = [item.decode('utf-8') for item in _block]
 
 
 _os_list = ['pcweb', 'samsungtv']
@@ -167,7 +168,7 @@ def save_channel(live):
             ch_genre = channel['genre']
             ch_id = channel['channel']
 
-            if _block and ch_genre == _block.decode('utf-8'):
+            if _block_list and ch_genre in _block_list:
                 continue
             else:
                 play_list = play_list + '#EXTINF:%s radio="%s" group-title="%s" tvg-logo="%s" tvg-id="%s",%s\n%s\n' % (ch_id, ch_radio, ch_genre, ch_epg_name + '.png', ch_epg_name, ch_title, ch_sources)
@@ -198,7 +199,7 @@ def save_epg(live):
         w = xmltv.Writer(encoding='UTF-8', date=str(time.time()), source_info_url="", source_info_name="", generator_info_name="", generator_info_url="")
 
         for i, channel in enumerate(live):
-            if _block and channel['genre'] == _block.decode('utf-8'):
+            if _block_list and channel['genre'] in _block_list:
                 continue
             else:
                 w.addChannel({'display-name': [(channel['title'], u'bg')], 'id': channel['epg_name'], 'url': ['https://test.iptv.bulsat.com']})
