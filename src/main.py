@@ -42,6 +42,11 @@ parser.add_argument(
         help=u'Timeout in seconds (default: 10)',
         default=os.environ.get('BULSAT_TIMEOUT', 10))
 parser.add_argument(
+        '--wait',
+        type=int,
+        help=u'Wait time between updates (default: 300)',
+        default=os.environ.get('BULSAT_WAIT', 300))
+parser.add_argument(
         '--os',
         type=int,
         choices=[0, 1],
@@ -77,6 +82,7 @@ _download_epg = args.epg
 _cache = args.cache
 _url = args.url
 _timeout = args.timeout
+_wait = args.wait
 _os = args.os
 _debug = args.debug
 _block = args.block.split(',')
@@ -238,7 +244,7 @@ def load_channel():
     file_time = os.path.getmtime(_files_path + '/bulsat.m3u')
 
     # check if it is old
-    if time.time() - file_time < 60 * 60 * 1:
+    if time.time() - file_time < _wait:
         return True
 
     return False
