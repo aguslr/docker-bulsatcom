@@ -1,5 +1,6 @@
 import io
 import os
+import pprint
 import xmltv
 import time
 import json
@@ -86,8 +87,7 @@ except AttributeError:
 
 
 _os_list = ['pcweb', 'samsungtv']
-
-
+_pp = pprint.PrettyPrinter(indent=4)
 _s = requests.Session()
 
 _ua = {
@@ -103,7 +103,7 @@ _ua = {
 
 def log(s):
     if _debug:
-        print(s)
+        _pp.pprint(s)
 
 def login(username, password):
     url_auth = 'auth'
