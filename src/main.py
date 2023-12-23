@@ -76,7 +76,10 @@ _timeout = args.timeout
 _os = args.os
 _debug = args.debug
 _block = args.block.split(',')
-_block_list = [item.decode('utf-8') for item in _block]
+try:
+    _block_list = [item.decode('utf-8') for item in _block]
+except AttributeError:
+    _block_list = _block
 
 
 _os_list = ['pcweb', 'samsungtv']
