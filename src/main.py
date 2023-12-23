@@ -114,7 +114,7 @@ def login(username, password):
 
     _s.headers.update({'SSBULSATAPI': session})
 
-    enc = aes.AESModeOfOperationECB(key)
+    enc = aes.AESModeOfOperationECB(key.encode())
     password_crypt = enc.encrypt(password + (16 - len(password) % 16) * '\0')
 
     r = _s.post(_url + '/' + url_auth, timeout = _timeout, headers = _ua, data = {
