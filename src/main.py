@@ -219,7 +219,7 @@ def save_epg(live):
 
         out = BytesIO()
         w.write(out, pretty_print=True)
-        f_lmx = open(os.path.join(_files_path, '', 'bulsat.xml'), 'w+', 9)
+        f_lmx = open(os.path.join(_files_path, '', 'bulsat.xml'), 'wb+', 9)
         f_lmx.write(out.getvalue())
         f_lmx.close()
         out.close()
