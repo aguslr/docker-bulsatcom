@@ -13,28 +13,35 @@ import argparse
 parser = argparse.ArgumentParser(description='Usage: %prog [options]')
 parser.add_argument(
         '--username',
+        type=str,
         help=u'Username for Bulsatcom',
         default=os.environ.get('BULSAT_USERNAME', 'test'))
 parser.add_argument(
         '--password',
+        type=str,
         help=u'Password for Bulsatcom',
         default=os.environ.get('BULSAT_PASSWORD', 'test'))
 parser.add_argument(
         '--output',
+        type=str,
         help=u'Output directory',
         default=os.environ.get('BULSAT_OUTPUT', './'))
 parser.add_argument(
         '--url',
+        type=str,
         help=u'URL of API endpoint',
         default=os.environ.get('BULSAT_URL',
                                    'https://api.iptv.bulsat.com'))
 parser.add_argument(
         '--timeout',
+        type=int,
         help=u'Timeout in seconds (default: 10)',
         default=os.environ.get('BULSAT_TIMEOUT', 10))
 parser.add_argument(
         '--os',
-        help=u'OS Type [0: pcweb, 1: samsungtv] (default: 1)',
+        type=int,
+        choices=[0, 1],
+        help=u'OS Type [pcweb|samsungtv] (default: 1)',
         default=os.environ.get('BULSAT_OS', 1))
 parser.add_argument(
         '--epg',
@@ -53,21 +60,22 @@ parser.add_argument(
         default=os.environ.get('BULSAT_DEBUG', False))
 parser.add_argument(
         '--block',
+        type=str,
         help=u'Block specific genre',
         default=os.environ.get('BULSAT_BLOCK'))
 args = parser.parse_args()
 
 
-_username = str(args.username)
-_password = str(args.password)
-_files_path = str(args.output)
-_download_epg = bool(args.epg)
-_cache = bool(args.cache)
-_url = str(args.url)
-_timeout = int(args.timeout)
-_os = int(args.os)
-_debug = bool(args.debug)
-_block = str(args.block)
+_username = args.username
+_password = args.password
+_files_path = args.output
+_download_epg = args.epg
+_cache = args.cache
+_url = args.url
+_timeout = args.timeout
+_os = args.os
+_debug = args.debug
+_block = args.block
 
 
 _os_list = ['pcweb', 'samsungtv']
