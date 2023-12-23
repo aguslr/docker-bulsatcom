@@ -17,6 +17,5 @@ WORKDIR /data
 
 VOLUME /data
 
-USER www-data
 ENTRYPOINT ["/entrypoint.sh"]
 CMD ["--debug"]
