@@ -1,6 +1,5 @@
 import io
 import os
-import StringIO
 import xmltv
 import time
 import json
@@ -8,6 +7,10 @@ import requests
 import base64
 from pyaes import aes
 import argparse
+try:
+    from StringIO import StringIO as BytesIO
+except ImportError:
+    from io import BytesIO
 
 
 parser = argparse.ArgumentParser(description='Usage: %prog [options]')
@@ -214,7 +217,7 @@ def save_epg(live):
                     if len(p['title']) > 0:
                         w.addProgramme({'start': p['start'], 'stop': p['stop'], 'title': [(p['title'], u'')], 'desc': [(p['desc'], u'')], 'category': [(channel['genre'], u'')], 'channel': channel['epg_name']})
 
-        out = StringIO.StringIO()
+        out = BytesIO()
         w.write(out, pretty_print=True)
         f_lmx = open(os.path.join(_files_path, '', 'bulsat.xml'), 'w+', 9)
         f_lmx.write(out.getvalue())
