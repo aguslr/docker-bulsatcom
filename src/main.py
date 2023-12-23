@@ -65,7 +65,7 @@ parser.add_argument(
         '--block',
         type=str,
         help=u'Comma separated list of genres to block',
-        default=os.environ.get('BULSAT_BLOCK'))
+        default=os.environ.get('BULSAT_BLOCK', ''))
 args = parser.parse_args()
 
 
