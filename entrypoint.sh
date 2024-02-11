@@ -1,5 +1,7 @@
 #!/bin/sh
 
+trap 'exit 0' INT TERM
+
 # Start Python script
 case "$1" in
 	-h|--help)
