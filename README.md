@@ -9,6 +9,8 @@ This *Docker* image downloads M3U and EPG files from *Bulsatcom*'s IPTV service.
 > **[Bulsatcom][2]** is Bulgarian satellite television, internet & mobile
 > operator, founded in 2000 as the first DVB-S operator in the country.
 
+It's a refactoring of Vasil Valchev's [IPTV Kodi add-on for Bulsatcom][3].
+
 
 Installation
 ------------
@@ -59,3 +61,4 @@ Instead of pulling the image from a remote repository, you can build it locally:
 
 [1]: https://github.com/aguslr/docker-bulsatcom
 [2]: https://www.bulsatcom.bg/
+[3]: https://github.com/vastril4o/iptv.bsc
