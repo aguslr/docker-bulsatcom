@@ -9,8 +9,7 @@ RUN \
   -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" \
   && apt-get clean && rm -rf /var/lib/apt/lists/* /var/lib/apt/lists/*
 
-COPY src /src
-COPY entrypoint.sh /entrypoint.sh
+COPY rootfs/ /
 
 WORKDIR /data
 
