@@ -1,7 +1,7 @@
 [aguslr/docker-bulsatcom][1]
 ============================
 
-[![publish-docker-image](https://github.com/aguslr/docker-bulsatcom/actions/workflows/docker-publish.yml/badge.svg)](https://github.com/aguslr/docker-bulsatcom/actions/workflows/docker-publish.yml) [![docker-pulls](https://img.shields.io/docker/pulls/aguslr/bulsatcom)](https://hub.docker.com/r/aguslr/bulsatcom) [![image-size](https://img.shields.io/docker/image-size/aguslr/bulsatcom/latest)](https://hub.docker.com/r/aguslr/bulsatcom)
+[![docker-pulls](https://img.shields.io/docker/pulls/aguslr/bulsatcom)](https://hub.docker.com/r/aguslr/bulsatcom) [![image-size](https://img.shields.io/docker/image-size/aguslr/bulsatcom/latest)](https://hub.docker.com/r/aguslr/bulsatcom)
 
 
 This *Docker* image downloads M3U and EPG files from *Bulsatcom*'s IPTV service.
